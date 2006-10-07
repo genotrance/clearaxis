@@ -1,7 +1,7 @@
 @echo off
 
 :: Version
-set VERSION=1.0
+set VERSION=1.01
 
 ::Set personal Path to the Apps:
 set PythonEXE=D:\Mess\Python24\python.exe
@@ -71,7 +71,9 @@ goto eof
         echo    options = {
         echo       "py2exe": {
         echo          "packages" : ["encodings"],
-        echo          "optimize" : 2
+        echo          "optimize" : 2,
+        echo          "compressed" : 1,
+        echo          "bundle_files" : 2
         echo       }
         echo    },
         echo    zipfile = None)
