@@ -109,7 +109,7 @@ class Clearaxis:
                 i += 1
                 self.args.append('/title' + t.__str__() + ':"' + sys.argv[i] + '"')
             else:
-                self.args.append('"' + sys.argv[i] + '"')
+                self.args.append(sys.argv[i])
 
             i += 1
 
