@@ -1,0 +1,4 @@
+1.01
+----
+- Fixed bug where file paths with spaces were not being sent to Araxis Merge correctly.
+- Library and DLLs are now being bundled into clearaxis.exe and compressed.
