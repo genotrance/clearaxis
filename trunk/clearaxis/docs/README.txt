@@ -50,7 +50,7 @@ Links
 -----
 
 Clearaxis website
-http://www.genotrance.com/
+http://www.genotrance.com/applications/clearaxis
 
 Python
 http://www.python.org
