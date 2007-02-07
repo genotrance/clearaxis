@@ -11,6 +11,7 @@ CLEARCASE_DIFF = 'cleardiffmrg.exe'
 TEXT_FILE_DELTA_XCOMPARE = "(^text_file_delta\s+xcompare\s+)(\.\.\\\.\.\\\\bin\\\\cleardiffmrg\.exe)"
 HTML_XCOMPARE            = "(^_html[2]*\s+xcompare\s+)(\.\.\\\.\.\\\\bin\\\\htmlmgr\.exe)"
 XML_XCOMPARE             = "(^_xml[2]*\s+xcompare\s+)(\.\.\\\.\.\\\\bin\\\\cleardiffmrg\.exe)"
+XML_XCOMPARE_7           = "(^_xml[2]*\s+xcompare\s+)(\.\.\\\.\.\\\\bin\\\\xmldiffmrg\.exe)"
 
 # Error codes
 INSUFFICIENT_ARGUMENTS        = 100
@@ -46,8 +47,12 @@ class Clearaxis:
 
     # Get Araxis path from the registry
     def get_araxis_path(self):
-        path = self.get_registry_key(_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\merge.exe', None)
-        self.araxis_path = re.sub('"', '', re.sub('merge.exe', '', path))
+        merge_executables = ['merge.exe', 'merge60pro.exe']
+        for merge_executable in merge_executables:
+            path = self.get_registry_key(_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\' + merge_executable, None)
+            self.araxis_path = re.sub('"', '', re.sub(merge_executable, '', path))
+            if self.araxis_path != '':
+                return
 
     # Get ClearCase path from the registry
     def get_clearcase_path(self):
@@ -118,10 +123,11 @@ class Clearaxis:
         # Run diff command depending on whether Araxis is installed
         if self.araxis_path != '':
             self.args.insert(0, ARAXIS_DIFF)
-            os.execvp(self.araxis_path + ARAXIS_DIFF, self.args)
+            self.args.append('/wait')
+            os.spawnv(os.P_WAIT, self.araxis_path + ARAXIS_DIFF, self.args)
         elif self.clearcase_path != '':
             sys.argv.insert(0, CLEARCASE_DIFF)
-            os.execvp(self.clearcase_path + CLEARCASE_DIFF, sys.argv)
+            os.spawnv(os.P_WAIT, self.clearcase_path + CLEARCASE_DIFF, sys.argv)
 
     # Install clearaxis
     def install_clearaxis(self):
@@ -184,6 +190,10 @@ class Clearaxis:
             # Xml xcompare
             if (self.xml_xcompare):
                 m = re.match(XML_XCOMPARE, line)
+                if m != None:
+                    out += m.groups()[0] + self.clearaxis_path + "\n"
+                    continue
+                m = re.match(XML_XCOMPARE_7, line)
                 if m != None:
                     out += m.groups()[0] + self.clearaxis_path + "\n"
                     continue
