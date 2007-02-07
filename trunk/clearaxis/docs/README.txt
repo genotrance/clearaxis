@@ -44,7 +44,7 @@ in the installer.
 Contact
 -------
 
-Contact genosha@genotrance.com for any questions regarding this program.
+Contact ganeshjgd@gmail.com for any questions regarding this program.
 
 Links
 -----
