@@ -1,0 +1,13 @@
+1.02
+----
+- Fixed a bug where Clearaxis was exiting after spawning Araxis Merge instead of
+  sticking around. This was causing ClearCase to delete temporary files required
+  by Araxis for the diff. (Fixed by Stuart Goldberg)
+- Fixed a bug where Clearaxis was unable to find the Araxis install path for 
+  version 6.0.
+- Fixed a bug where Clearaxis was not adding XML support for ClearCase 7.
+
+1.01
+----
+- Fixed bug where file paths with spaces were not being sent to Araxis Merge correctly.
+- Library and DLLs are now being bundled into clearaxis.exe and compressed.
