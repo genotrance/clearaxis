@@ -1,3 +1,10 @@
+1.03
+----
+- Araxis Merge path is now obtained from CLSID to support version 2007.
+- Added new Python based build system.
+- Updated installer to uninstall older versions on install and uninstall files safely.
+- Documentation and source is now installed to \docs and \src respectively.
+
 1.02
 ----
 - Fixed a bug where Clearaxis was exiting after spawning Araxis Merge instead of

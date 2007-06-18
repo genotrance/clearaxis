@@ -47,12 +47,8 @@ class Clearaxis:
 
     # Get Araxis path from the registry
     def get_araxis_path(self):
-        merge_executables = ['merge.exe', 'merge60pro.exe']
-        for merge_executable in merge_executables:
-            path = self.get_registry_key(_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\' + merge_executable, None)
-            self.araxis_path = re.sub('"', '', re.sub(merge_executable, '', path))
-            if self.araxis_path != '':
-                return
+        path = self.get_registry_key(_winreg.HKEY_CLASSES_ROOT, 'CLSID\\{6bc05a94-8ec8-11d2-b346-0000e835aa2c}\\LocalServer32', None)
+        self.araxis_path = re.sub(os.path.basename(path), '', path)
 
     # Get ClearCase path from the registry
     def get_clearcase_path(self):

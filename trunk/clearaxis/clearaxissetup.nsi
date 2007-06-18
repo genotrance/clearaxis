@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME                         "Clearaxis"
-!define PRODUCT_VERSION                      "1.02"
+!define PRODUCT_VERSION                      "#VERSION#"
 !define PRODUCT_PUBLISHER                    "Ganesh Viswanathan"
 !define PRODUCT_WEB_SITE                     "http://www.genotrance.com"
 !define PRODUCT_UNINST_KEY                   "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -15,7 +15,7 @@
 !define INSTALL_DIRECTORY                    "$PROGRAMFILES\Clearaxis"
 
 ; Location of the installation files
-!define INSTALLATION_FILES_LOCATION          "clearaxis_EXE"
+!define INSTALLATION_FILES_LOCATION          "dist"
 
 ; Location of the documentation files
 !define DOCUMENTATION_FILES_LOCATION          "docs"
@@ -76,13 +76,28 @@ Function EnterInstallOptions
 FunctionEnd
 
 Section "Installer" SEC01
+  ; Close and uninstall older version of AppSnap
+  ReadRegStr $R0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString"
+  StrCmp $R0 "" uninstalldone
+  StrCpy $R1 $R0 -10
+  ExecWait '$R0 /S _?=$R1'
+  Delete $R0
+  uninstalldone:
+
   ; Copy install files
   SetOutPath "$INSTDIR"
   File "${INSTALLATION_FILES_LOCATION}\*.*"
+
+  ; Copy documentation
+  SetOutPath "$INSTDIR\docs"
   File "${DOCUMENTATION_FILES_LOCATION}\*.*"
 
   ; Copy source
+  SetOutPath "$INSTDIR\src"
   File "*.py"
+  File "*.ini"
+  
+  SetOutPath "$INSTDIR"
 SectionEnd
 
 Section -Post
@@ -105,7 +120,7 @@ Section -Post
   nsExec::ExecToStack '$R9'
 
   ; Display README
-  ExecShell "open" "$INSTDIR\README.txt"
+  ExecShell "open" "$INSTDIR\docs\README.txt"
 SectionEnd
 
 Function un.onUninstSuccess
@@ -122,8 +137,11 @@ Section Uninstall
   ; Uninstall
   nsExec::ExecToStack '"$INSTDIR\clearaxis.exe" -uninstall'
 
-  ; Delete all files and directories
-  RMDir /r "$INSTDIR"
+  ; Delete all installed files and directories
+  RMDir /r "$INSTDIR\docs"
+  RMDir /r "$INSTDIR\src"
+  Delete "$INSTDIR\*.*"
+  RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   SetAutoClose true
