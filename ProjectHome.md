@@ -1,0 +1,1 @@
+Clearaxis is a simple application that integrates the Araxis Merge diff tool into ClearCase. Compare.exe that ships with Araxis works for dynamic views but fails on snapshot views. Clearaxis just converts the command line arguments from ClearCase into something that Compare.exe can use.
